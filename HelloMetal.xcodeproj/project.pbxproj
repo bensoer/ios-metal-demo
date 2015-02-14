@@ -13,6 +13,7 @@
 		1050B4F61A8F34F4006BF4BC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1050B4F51A8F34F4006BF4BC /* Images.xcassets */; };
 		1050B4F91A8F34F4006BF4BC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1050B4F71A8F34F4006BF4BC /* LaunchScreen.xib */; };
 		1050B5051A8F34F4006BF4BC /* HelloMetalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1050B5041A8F34F4006BF4BC /* HelloMetalTests.swift */; };
+		1050B50F1A8F36B3006BF4BC /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 1050B50E1A8F36B3006BF4BC /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		1050B4FE1A8F34F4006BF4BC /* HelloMetalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloMetalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1050B5031A8F34F4006BF4BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1050B5041A8F34F4006BF4BC /* HelloMetalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloMetalTests.swift; sourceTree = "<group>"; };
+		1050B50E1A8F36B3006BF4BC /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				1050B4EE1A8F34F4006BF4BC /* AppDelegate.swift */,
 				1050B4F01A8F34F4006BF4BC /* ViewController.swift */,
+				1050B50E1A8F36B3006BF4BC /* Shaders.metal */,
 				1050B4F21A8F34F4006BF4BC /* Main.storyboard */,
 				1050B4F51A8F34F4006BF4BC /* Images.xcassets */,
 				1050B4F71A8F34F4006BF4BC /* LaunchScreen.xib */,
@@ -161,6 +164,7 @@
 				TargetAttributes = {
 					1050B4E81A8F34F3006BF4BC = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = L9GR6R2227;
 					};
 					1050B4FD1A8F34F4006BF4BC = {
 						CreatedOnToolsVersion = 6.2;
@@ -212,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1050B50F1A8F36B3006BF4BC /* Shaders.metal in Sources */,
 				1050B4F11A8F34F4006BF4BC /* ViewController.swift in Sources */,
 				1050B4EF1A8F34F4006BF4BC /* AppDelegate.swift in Sources */,
 			);
@@ -338,6 +343,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = HelloMetal/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -348,6 +354,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = HelloMetal/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
