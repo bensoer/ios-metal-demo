@@ -18,16 +18,23 @@ class ViewController: UIViewController {
     
     var metalLayer: CAMetalLayer! = nil
     
-    var vertexBuffer: MTLBuffer! = nil
+    //var vertexBuffer: MTLBuffer! = nil
     
-    let vertexData:[Float] = [
+   /* let vertexData:[Float] = [
         0.0, 1.0, 0.0,
         -1.0, -1.0, 0.0,
-        1.0, -1.0, 0.0]
+        1.0, -1.0, 0.0]*/
+    
+    //var objectToDraw: Triangle!
+    var objectToDraw: Cube!
     
     var pipelineState: MTLRenderPipelineState! = nil
     
     var commandQueue: MTLCommandQueue! = nil
+    
+    var projectionMatrix: Matrix4!
+    
+    var lastFrameTimestamp: CFTimeInterval = 0.0 //rotation timer
     
     /* -- END OF SETUP ATTRIBUTES -- */
     
@@ -36,6 +43,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        projectionMatrix = Matrix4.makePerspectiveViewAngle(Matrix4.degreesToRad(85.0), aspectRatio: Float(self.view.bounds.size.width / self.view.bounds.size.height), nearZ: 0.01, farZ: 100.0)
         
         device = MTLCreateSystemDefaultDevice();
         
@@ -46,8 +55,12 @@ class ViewController: UIViewController {
         metalLayer.frame = view.layer.frame  // 5
         view.layer.addSublayer(metalLayer)   // 6
         
-        let dataSize = vertexData.count * sizeofValue(vertexData[0]) // 1
-        vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: nil) // 2
+        //let dataSize = vertexData.count * sizeofValue(vertexData[0]) // 1
+        //vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: nil) // 2
+        
+        //objectToDraw = Triangle(device: device) -- draws a triangle
+        objectToDraw = Cube(device: device) // -- draws a cube
+        
         
         // 1
         let defaultLibrary = device.newDefaultLibrary()
@@ -71,33 +84,44 @@ class ViewController: UIViewController {
         
         /* -- END OF SETUP CODE -- */
         
-        timer = CADisplayLink(target: self, selector: Selector("gameloop"))
+        timer = CADisplayLink(target: self, selector: Selector("newFrame:")) //timer calls function
         timer.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
     }
     
     func render() {
-        // TODO
         var drawable = metalLayer.nextDrawable()
-        let renderPassDescriptor = MTLRenderPassDescriptor()
-        renderPassDescriptor.colorAttachments[0].texture = drawable.texture //could be an issue
-        renderPassDescriptor.colorAttachments[0].loadAction = .Clear
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
         
-        let commandBuffer = commandQueue.commandBuffer()
+        //altering world view
+        var worldModelMatrix = Matrix4()
         
-        let renderEncoderOpt = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
-        if let renderEncoder = renderEncoderOpt {
-            renderEncoder.setRenderPipelineState(pipelineState)
-            renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
-            renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
-            renderEncoder.endEncoding()
-        }
+        worldModelMatrix.translate(0.0, y: 0.0, z: -7.0)
+        worldModelMatrix.rotateAroundX(Matrix4.degreesToRad(25), y: 0.0, z: 0.0)
         
-        commandBuffer.presentDrawable(drawable)
-        commandBuffer.commit()
+        objectToDraw.render(commandQueue, pipelineState: pipelineState, drawable: drawable, parentModelViewMatrix: worldModelMatrix, projectionMatrix: projectionMatrix ,clearColor: nil)
     }
     
-    func gameloop() {
+    // 1 -- TIMER RECALC FUNCTION
+    func newFrame(displayLink: CADisplayLink){
+        
+        if lastFrameTimestamp == 0.0
+        {
+            lastFrameTimestamp = displayLink.timestamp
+        }
+        
+        // 2
+        var elapsed:CFTimeInterval = displayLink.timestamp - lastFrameTimestamp
+        lastFrameTimestamp = displayLink.timestamp
+        
+        // 3
+        gameloop(timeSinceLastUpdate: elapsed)
+    }
+    // -- TIMER RECALC FUNCTION
+    func gameloop(#timeSinceLastUpdate: CFTimeInterval) {
+        
+        // 4
+        objectToDraw.updateWithDelta(timeSinceLastUpdate)
+        
+        // 5
         autoreleasepool {
             self.render()
         }
